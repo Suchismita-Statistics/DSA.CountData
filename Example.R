@@ -45,6 +45,6 @@ for(i in 1:50)
   data_sellke[[i]] =  sellke(n = 1000, rho = 0.05, beta = 2, gamma = 0.5, Tmax = 10)
   count_result[[i]] = count_lkd(simulated_data, T.max_analysis = 10, frailty = FALSE)
 }
-#####
+######
 summary_stan( result_list = count_result, index = 1, true_value = 2 )
 summary_stan_list(result_list, true_value = c(2, 0.5, 0.05, 4))
