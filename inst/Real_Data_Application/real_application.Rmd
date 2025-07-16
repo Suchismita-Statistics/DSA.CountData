@@ -1,0 +1,367 @@
+---
+title: "Finally_China"
+output: pdf_document
+date: "2025-06-12"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Data Set: "new_incidence_china.csv".
+SIR Results of my analysis: "sir_result_53_cities.csv".
+Frailty Results of my analysis: "frailty_result_53_cities.csv".
+
+All my generated plots are given in fitted_plots folder.
+
+
+
+```{r}
+sir_fixg = "
+functions{
+  real[] two_ode(real t, real[] y, real[] parms, real[] x_r, int[] x_i){
+      real b = parms[1];
+      real r = parms[2];
+      real dydt[2];
+      
+      dydt[1] = -b*y[1]*y[2];
+      dydt[2] = b*y[1]*y[2] - y[2]/6;
+      return dydt;
+      }
+}
+
+data{
+  int<lower = 0> inf_len;
+  int<lower = 0> infection_count[inf_len]; 
+  int<lower = 0> K;
+  real t0;
+  real int_time[inf_len];
+}
+
+transformed data {
+  real x_r[0];
+  int x_i[0];
+}
+
+parameters {
+   real<lower=0, upper = 50> b;               
+  real<lower=0, upper = 1 > r;   
+}
+
+transformed parameters{
+  real<lower = 0> R0;
+  R0 = b*6;
+}
+
+model{
+  real parms[2];
+  real ic[2];
+  real smax;
+  real ode_sol[inf_len+1, 2];
+  
+  
+  parms[1] = b;
+  parms[2] = r;
+  
+  ic[1] = 1.0;
+  ic[2] = r;
+  
+  ode_sol[1, ] = ic;
+  ode_sol[2:(inf_len+1), ] = integrate_ode_rk45(two_ode, ic, t0, int_time, parms, x_r, x_i, 1e-8, 1e-8, 1e6);
+  smax = ode_sol[inf_len+1, 1];
+
+  for(i in 1:(inf_len)){
+   target += infection_count[i]*(log(ode_sol[i, 1] - ode_sol[i+1, 1]) - log(1-smax));
+  }
+ target +=  gamma_lpdf(b|0.2, 0.2) + uniform_lpdf(r|0, 1);
+}
+
+generated quantities{
+  real<lower = 0> N_est;
+  real parms[2];
+  real ic[2];
+  real smax;
+  real ode_sol[inf_len+1, 2];
+  
+  
+  parms[1] = b;
+  parms[2] = r;
+  
+  ic[1] = 1.0;
+  ic[2] = r;
+  
+  ode_sol[1, ] = ic;
+  ode_sol[2:(inf_len+1), ] = integrate_ode_rk45(two_ode, ic, t0, int_time, parms, x_r, x_i, 1e-8, 1e-8, 1e6);
+  smax = ode_sol[inf_len+1, 1];
+
+  N_est = K/(1-smax);
+}
+
+
+" 
+```
+
+```{r}
+frailty_fixg = 
+"functions{
+  real[] two_ode(real t, real[] y, real[] parms, real[] x_r, int[] x_i){
+      real b = parms[1];
+      real r = parms[2];
+      real n = parms[3];
+      real dydt[2];
+      
+  
+      dydt[1] = -b*exp(y[2])*exp(y[1]*(n^2) );
+      dydt[2] = b*(exp(y[1]*(1+n^2))) - 0.16666667;
+      return dydt;
+      }
+}
+
+data{
+  int<lower = 0> inf_len;
+  int<lower = 0> infection_count[inf_len]; 
+   int<lower = 0> K;
+  real t0;
+  real int_time[inf_len];
+}
+
+transformed data {
+  real x_r[0];
+  int x_i[0];
+}
+
+parameters {
+ real<lower=0, upper = 50> b;               
+  real<lower=0, upper= 1> r;
+  real<lower = 0, upper = 30> n;
+}
+
+transformed parameters{
+  real<lower = 1, upper = 50> R0;
+  R0 = 6*b;
+}
+
+model{
+  real parms[3];
+  real ic[2];
+  real smax;
+  real ode_sol[inf_len+1, 2];
+  
+  parms[1] = b;
+  parms[2] = r;
+  parms[3] = n;
+  
+  ic[1] = 0;
+  ic[2] = log(r);
+  
+  ode_sol[1, ] = ic;
+  ode_sol[2:(inf_len+1), ] = integrate_ode_rk45(two_ode, ic, t0, int_time, parms, x_r, x_i, 1e-8, 1e-8, 1e6);
+  ode_sol[, 1] = exp(ode_sol[, 1]);
+  smax = ode_sol[(inf_len+1), 1];
+
+  for(i in 1:(inf_len)){
+    target += infection_count[i]*(log(ode_sol[i, 1] - ode_sol[i+1, 1]) - log(1 - smax));
+  }
+  target += gamma_lpdf(b|0.2, 0.2) + gamma_lpdf(n|0.2, 0.2) + uniform_lpdf(r|0, 1);
+}
+
+generated quantities{
+  real<lower = 0> N_est;
+  real parms[3];
+  real ic[2];
+  real smax;
+  real ode_sol[inf_len+1, 2];
+  
+  
+  parms[1] = b;
+  parms[2] = r;
+  parms[3] = n;
+  
+   ic[1] = 0;
+  ic[2] = log(r);
+  
+  ode_sol[1, ] = ic;
+  ode_sol[2:(inf_len+1), ] = integrate_ode_rk45(two_ode, ic, t0, int_time, parms, x_r, x_i, 1e-8, 1e-8, 1e6);
+  ode_sol[, 1] = exp(ode_sol[, 1]);
+  smax = ode_sol[(inf_len+1), 1];
+
+  N_est = K/(1-smax);
+}
+
+
+"
+```
+
+```{r}
+data = read.csv("new_incidence_china.csv")
+data_work = data[, -c(1:6)]
+total_inf_perday = apply(data_work, 2, sum) 
+colnames(data_work)[1:41]
+
+data_final = as.matrix(data_work[, 1:41])
+
+data_final = unname(data_final)
+
+rownames(data_final) = NULL
+
+for(i in 1:nrow(data_final))
+{
+  for(j in 1:ncol(data_final))
+  {
+    value = data_final[i, j]
+    if(value < 0)
+    {
+      print(c(i, j))
+      data_final[i, j] = 0
+    }
+  }
+}
+
+MA_data = t(apply(data_final, 1, function(x) round(na.omit(stats::filter(x, rep(1/3, 3), sides = 2)))))
+MA_data_final = cbind(data_work[, 1], MA_data, data_work[, 41])
+dim(MA_data_final)
+
+```
+
+```{r}
+library("rstan")
+sm_sir =  stan_model(model_code = sir_fixg )  
+sm_fr = stan_model(model_code = frailty_fixg)  
+            
+run_real_data = function(data_now)
+{
+   data_ct = list( inf_len = length(data_now)[1], infection_count = unlist(c(data_now)), 
+                K = sum(unlist(data_now)), t0 = 0, int_time = 1:length(data_now))
+   
+   fit_sir = sampling(sm_sir, data = data_ct, iter = 5e4, chain = 4, cores = 4, 
+                   seed = 1234, control=list(adapt_delta=.9), init = list(list(b = 0.2, r = 0.01), list(b = 0.4, r = 0.06), list(b = 0.8, r = 0.02), list(b = 1, r = 0.04)))
+   
+   fit_fr = sampling(sm_fr, data = data_ct, iter = 5e4, chain = 4, cores = 4, 
+                seed = 124, control=list(adapt_delta=.9), init = list(list(b = 0.2, r = 0.01, n = 0.1), list(b = 0.4, r = 0.06, n = 0.5), list(b = 0.8, r = 0.02, n = 1), list(b = 1, r = 0.04, n = 0.8)) )
+   
+   return(list(fit_sir, fit_fr))
+}
+```
+
+
+```{r}
+summary_real = function(result, fr = FALSE)
+{
+  
+  if(fr == FALSE)
+  {
+     fit_ext = extract(result, pars = c("b",  "r", "N_est", "R0"))
+     fit_ext2 = list()
+     fit_ext2[1:4] = fit_ext
+     fit_ext2[[5]] = fit_ext$b/fit_ext$N_est
+  }else{
+   fit_ext = extract(result, pars = c("b",  "r", "n", "N_est", "R0")) 
+    fit_ext2 = list()
+     fit_ext2[1:5] = fit_ext
+     fit_ext2[[6]] = fit_ext$b/fit_ext$N_est
+  }
+  fit_mn = unlist(lapply(fit_ext2, mean))
+  lb = unlist(lapply(fit_ext2, function(x) quantile(x, 0.025)))
+  ub = unlist(lapply(fit_ext2, function(x) quantile(x, 0.975)))
+
+  
+  res_mat = matrix(c(fit_mn, lb, ub), byrow = T, ncol = length(fit_mn))
+  return(list( c(res_mat), fit_mn))
+  
+}
+
+
+draw_hist = function(result_full, data_now, title)
+{
+  sir = summary_real(result_full[[1]], fr = FALSE)
+  fr = summary_real(result_full[[2]], fr = TRUE)
+  
+  sir_mn = sir[[2]]
+  fr_mn = fr[[2]]
+  
+  tr1 = f_tau(beta = sir_mn[1], gamma = 1/6, rho = sir_mn[2], Tmax = length(data_now))
+  tr2 = f_tau_fr(beta = fr_mn[1], gamma = 1/6, rho = fr_mn[2], nu = fr_mn[3], Tmax = length(data_now))
+  
+  tr1_df <- data.frame(x = tr1[, 1], y = tr1[, 2])
+tr2_df <- data.frame(x = tr2[, 1], y = tr2[, 2])
+  
+rdm = list()
+for(i in 1:length(data_now))
+{
+  {
+    rdm[[i]] = runif(unlist(data_now[i]), (i-1), (i))
+  }
+}
+hist(unlist(rdm), probability = TRUE, col = "white", breaks = seq(0, length(data_now), 1), main = title, xlab = "days" );lines(tr1[, 1],  tr1[, 2], col = "red", lwd = 1);lines(tr2[, 1], tr2[, 2], col = "darkgreen", lty = 2, lwd = 2);legend("topright", legend = c("SIR", "Frailty"), col = c("red", "darkgreen"), lty = 1:2)
+}
+
+sample_run = run_real_data(data_now = MA_data_final[34, ])
+draw_hist(sample_run, MA_data_final[34, ], "Comparison of fits of Yichang City")
+
+temp1 = summary_real(sample_run[[1]], F)
+M1 = matrix(temp1[[1]], nrow = 5, byrow = TRUE)
+xtable::xtable(M1)
+
+temp2 = summary_real(sample_run[[2]], T)
+M2 = matrix(temp2[[1]], ncol = 3, byrow = TRUE)
+xtable::xtable(M2)
+```
+
+
+## Plotting the Results
+
+```{r}
+sir_res = read.csv("sir_result_53_cities.csv")
+fr_res = read.csv("frailty_result_53_cities.csv")
+
+sir_mean = matrix(c(sir_res$beta_mean, sir_res$rho_mean), ncol = 2)
+fr_mean = matrix(c(fr_res$beta_mean, fr_res$rho_mean, fr_res$nu_mean), ncol = 3)
+
+# Create the folder if it does not exist
+if (!dir.exists("fitted_plots")) {
+  dir.create("fitted_plots")
+}
+
+for (i in 1:53) {
+  # Define unique file name for each city
+  filename <- paste0("fitted_plots/fit_city_", i, ".png")
+  
+  # Open PNG device
+  png(filename, width = 1200, height = 800, res = 150) # adjust size/resolution as desired
+  
+  # Call your plotting function
+  if (i == 4) {
+    draw_hist(
+      sir_mn = sir_mean[i, ],
+      fr_mn = fr_mean[i, ],
+      data_now = MA_data_final[i, ],
+      title = paste("Comparison of Fits for City", citynames[i]),
+      ub = 0.07
+    )
+  } else if (i == 48) {
+    draw_hist(
+      sir_mn = sir_mean[i, ],
+      fr_mn = fr_mean[i, ],
+      data_now = MA_data_final[i, ],
+      title = paste("Comparison of Fits for City", citynames[i]),
+      ub = 0.08
+    )
+  } else {
+    draw_hist(
+      sir_mn = sir_mean[i, ],
+      fr_mn = fr_mean[i, ],
+      data_now = MA_data_final[i, ],
+      title = paste("Comparison of Fits for City", citynames[i]),
+      ub = 0
+    )
+  }
+  
+  # Close PNG device to write file
+  dev.off()
+}
+
+```
+
+

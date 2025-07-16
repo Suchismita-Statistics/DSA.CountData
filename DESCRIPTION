@@ -1,0 +1,14 @@
+Package: DSA.CountData
+Type: Package
+Title: DSA models for Count Data
+Version: 0.1.0
+Author: person("Suchismita", "Roy",,"suchismita.roy@duke.edu", role = ("aut", "cre"))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: The Dynamical Survival Method gives a survival analysis interpretation of compartmental epidemic models. We use this method to make inference on our parameters of interest when we have partially observed data. The package performs Bayesian inference using HMC samples simulated from the posterior distribution via Stan. The method is computationally efficient and flexible. We have used the classical SIR model, frailty model, and Poisson network model to make inference in our package; however, the code can be easily modified for any other compartmental epidemic model. The package further contains data sets and the analysis of the third wave of the 2018–2020 Ebola outbreak in the Democratic Republic of the Congo, which lasted from May 27, 2019, to September 12, 2019, and new incidence cases from 53 cities during the early epidemic in China in 2020.
+License: MIT + file LICENSE
+Depends: R (>= 4.2.0)
+Imports: deSolve, ggplot2, stats, mcmcse, rstan(>= 2.21.8)
+SystemRequirements: C++14 compiler
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
