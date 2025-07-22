@@ -21,6 +21,7 @@
 
 full_lkd = function(data, T.max_analysis, iteration = 1e4, num_chain = 4, num_cores = 1, stan_seed = 12, stan_warmup = 0)
 {
+  print("Hi")
   initial_sus = data[data[, 1] != 0, ]
   N = dim(initial_sus)[1]
   M = dim(data)[1] - dim(initial_sus)[1]
