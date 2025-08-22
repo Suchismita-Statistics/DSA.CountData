@@ -7,7 +7,7 @@
 #' @param N Interger. Number of initial susceptible.
 #' @param beta Numeric. Infection rate parameter.
 #' @param gamma Numeric. Recovery rate parameter.
-#' @param rho Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < \code{rho} < 1.
+#' @param rho Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 <  \eqn{\rho}{rho} < 1.
 #' @param Tmax Numeric. Final observation time of epidemic.
 #' @param dt Numeric. Time increment.
 #' @return  Infection times, recovery times, number of Susceptible, Infected, Recovered at every time point.

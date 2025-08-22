@@ -1,7 +1,6 @@
 ## Analysis using simulated data
-
-T.max_analysis = 50 ## final time of the epidemic
-simulated_data = sellke(n = 1000, rho = 0.05, beta = 2, gamma = 0.5, Tmax = T.max_analysis)
+library(DSA.CountData)
+simulated_data = sellke(n = 1000, rho = 0.05, beta = 2, gamma = 0.5, Tmax = 10)
 head(simulated_data)
 
 T.max_analysis = max(simulated_data[, 1])
@@ -21,7 +20,8 @@ inf_time_final = numeric(length = T.max_analysis)
 
 inf_time_final[infection_days+1] = infection_count
 
-out = new_data_ct_lkd(time_points = 1:T.max_analysis, infection_count = inf_time_final, Final_time = T.max_analysis)
+out = new_data_ct_lkd(time_points = 1:T.max_analysis, infection_count = inf_time_final,
+                      Final_time = T.max_analysis)
 
 
 ### Likewise new_data_ct_lkd function can be used to analyze a new count data.
@@ -37,14 +37,30 @@ count_result = count_lkd(simulated_data, T.max_analysis = 10, frailty = FALSE)
 frailty_result = count_lkd(simulated_data, T.max_analysis = 10, frailty = TRUE)
 
 
-## One example of the simulation study
+## One example of the simulation study without frailty. Make frailty =.TRUE for using frailty model.
 count_result = list()
+
+
+full_result = list()
+uniform_result = list()
+
 data_sellke = list()
 for(i in 1:50)
 {
   data_sellke[[i]] =  sellke(n = 1000, rho = 0.05, beta = 2, gamma = 0.5, Tmax = 10)
-  count_result[[i]] = count_lkd(simulated_data, T.max_analysis = 10, frailty = FALSE)
+
+  ## Do inference using count likelihood when only daily infection counts are available
+  count_result[[i]] = count_lkd(data_sellke[[i]], T.max_analysis = 10, frailty = FALSE)
+
+  ## Do inference when only daily infection counts are available assuming infection times are uniformly distributed throughout the day
+  uniform_result[[i]] = unif_approx(data_sellke[[i]], T.max_analysis = 10, frailty = FALSE)
+
+  ## Do inference using complete likelihood when exact infection and recovery times are available
+  full_result[[i]] = full_lkd(data_sellke[[i]], T.max_analysis = 10, frailty = FALSE)
 }
+
+
+
 ######
 summary_stan( result_list = count_result, index = 1, true_value = 2 )
-summary_stan_list(result_list, true_value = c(2, 0.5, 0.05, 4))
+summary_stan_list(result_list, true_value = c(2, 0.5, 0.05))

@@ -9,11 +9,11 @@
 #' @param gamma Numeric. Recovery rate parameter.
 #' @param rho Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < rho < 1.
 #' @param Tmax Numeric. Final observation time of epidemic
-#' @param dt Numeric. time increment
-#' @return  A data set with two columns - exact infection times and recovery times respectively
+#' @param dt Numeric. time increment. Default is 0.1.
+#' @return  A data set with two columns - exact infection times and recovery times respectively.
 #' @export
 
-DSA_data = function(n, beta, gamma, rho, Tmax, dt = 0.01)
+DSA_data = function(n, beta, gamma, rho, Tmax, dt = 0.1)
 {
   m = n*rho
   data_gen = matrix(0, nrow = (n + m), ncol = 2)

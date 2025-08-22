@@ -9,11 +9,14 @@ summary_stan(result_list, index, true_value, not_cap = FALSE)
 \arguments{
 \item{result_list}{List of \code{stanfit} objects that we want to summarize.}
 
-\item{index}{Integer. It takes value 1, 2, 3 for beta, gamma, rho respectively.}
+\item{index}{Integer. It takes value 1, 2, 3 for \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho} respectively.}
 
 \item{not_cap}{Logical. If \code{TRUE}, it returns the pairs of 95% CI, which do not contain the true parameter. Otherwise, it returns mean of the means, standard deviations and the proportion of 95% CIs captures the true parameter.}
 
 \item{true_values}{The true value of the parameter.}
+}
+\value{
+Mean, standard deviation, 95% coverage of the list for a single parameter.
 }
 \description{
 Accepting a list of \code{stanfit} objects, it extracts summaries for a specified parameter and return the combined summaries by averaging across all the objects in the list.

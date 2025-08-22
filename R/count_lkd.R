@@ -17,8 +17,8 @@
 #' @param stan_seed Same as "seed" in Sampling function of Stan. Default is 12.
 #' @param stan_warmup Same as "warmup" in Sampling function of Stan. Default is floor(iteration/2).
 #' @return An object of class \code{stanfit} returned by \code{rstan::sampling()},
-#' containing the posterior samples for the parameters \code{beta}, \code{gamma}, \code{rho}, and \code{R_0}.#' @export
-
+#' containing the posterior samples for the parameters \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho}.
+#' @export
 count_lkd = function(data, T.max_analysis = 10, frailty = FALSE,  iteration = 1e4, num_chain = 4, num_cores = 1, stan_seed = 12, stan_warmup = 0)
 {
   initial_sus = data[data[, 1] != 0, ]

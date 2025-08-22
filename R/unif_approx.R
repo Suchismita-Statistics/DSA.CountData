@@ -6,14 +6,14 @@
 #' @import ggplot2
 #' @import mcmcse
 #' @param data Matrix/Data Frame with first column continuous infection times.
-#' @param T.max_analysis  Numeric. Final observation time of epidemic
+#' @param T.max_analysis  Numeric. Final observation time of epidemic.
 #' @param iteration Integer. The number of iterations for each chain (including warmup). The default is 10000.
 #' @param num_chain Integer specifying the number of Markov chains. The default is 4.
 #' @param num_cores Same as "cores" in Sampling function of Stan. Default is 1.
 #' @param stan_seed Same as "seed" in Sampling function of Stan. Default is 12.
 #' @param stan_warmup Same as "warmup" in Sampling function of Stan. Default is floor(iteration/2).
 #' @return  An object of class \code{stanfit} returned by \code{rstan::sampling()},
-#' containing the posterior samples for the parameters \code{beta}, \code{gamma}, \code{rho}, and \code{R_0}.
+#' containing the posterior samples for the parameters \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho}.
 #' @export
 
 
@@ -51,6 +51,6 @@ unif_approx = function(data, T.max_analysis, frailty = FALSE,
   sm = rstan::stan_model(file = stan_file)
 
   data_stan_full = list(N = N, K = K, t0 = 0, infection_time = c(sort(unlist(approx_inf_time)), T.max_analysis))
-  fit_full = rstan::sampling(sm_inf_sus, data = data_stan_full, iter = iteration, chain = num_chain, cores = num_cores, seed = stan_seed, warmup = stan_warmup)
+  fit_full = rstan::sampling(sm, data = data_stan_full, iter = iteration, chain = num_chain, cores = num_cores, seed = stan_seed, warmup = stan_warmup)
   return(fit_full)
 }

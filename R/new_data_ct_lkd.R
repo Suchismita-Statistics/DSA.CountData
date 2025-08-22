@@ -7,7 +7,7 @@
 #' @import ggplot2
 #' @import mcmcse
 #' @param time_points A numeric vector giving the right endpoints of the time intervals into which the observation period is divided. For example, if intervals are \((0,1], (1,2], \dots\), then \code{time_points = c(1, 2, ...)}. It is assumed that intervals are of equal length and starts from 0.
-#' @param infection_count A vector of integers giving the infection counts. We suggest to keep the time points integers between one to the final time and adjust the infection count vector such that it takes value zero, if we do not observe infections in some of the days.
+#' @param infection_count A vector of integers giving the infection counts. We suggest to keep the time points equally spaced between one to the final time and adjust the infection count vector such that it takes value zero, if we do not observe infections in some of the days.
 #' @param Final_time Numeric. Final observation time of epidemic.
 #' @param initial_sus If available, give the initial number of susceptible, otherwise, put 0.
 #' @param frailty Logical. If True, makes inference using frailty model and standard SIR model otherwise.
@@ -17,7 +17,7 @@
 #' @param stan_seed Same as "seed" in Sampling function of Stan. Default is 12.
 #' @param stan_warmup Same as "warmup" in Sampling function of Stan. Default is floor(iteration/2).
 #' @return  An object of class \code{stanfit} returned by \code{rstan::sampling()},
-#' containing the posterior samples for the parameters \code{beta}, \code{gamma}, \code{rho}, and \code{R_0}.
+#' containing the posterior samples for the parameters \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho}.
 #' @export
 
 
@@ -37,7 +37,6 @@ new_data_ct_lkd = function(time_points, infection_count, Final_time, initial_sus
       stan_file = system.file("stan", "count_wo_n.stan", package = "DSA.CountData")
     }else{
       stan_file = system.file("stan", "frailty_wo_n.stan", package = "DSA.CountData")
-
     }
     data_stan_full = list( inf_len = length(infection_count), infection_count = infection_count, K = K, t0 = 0, int_time = time_points)
   }else{

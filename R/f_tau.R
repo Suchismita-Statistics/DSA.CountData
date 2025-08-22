@@ -7,8 +7,8 @@
 #' @import ggplot2
 #' @param beta Numeric. Infection rate parameter.
 #' @param gamma Numeric. Recovery rate parameter.
-#' @param rho Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < rho < 1.
-#' @param Tmax Numeric. Final observation time of epidemic
+#' @param rho Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < \eqn{\rho}{rho} < 1.
+#' @param Tmax Numeric. Final observation time of epidemic.
 #' @param dt Numeric. Time increment.
 #' @return  A matrix with time points from zero to final time, and its corresponding value of the density  under standard SIR model at every time point.
 #' @export

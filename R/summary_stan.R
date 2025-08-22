@@ -6,15 +6,16 @@
 #' @import ggplot2
 #' @import mcmcse
 #' @param result_list List of \code{stanfit} objects that we want to summarize.
-#' @param index Integer. It takes value 1, 2, 3 for beta, gamma, rho respectively.
+#' @param index Integer. It takes value 1, 2, 3 for \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho} respectively.
 #' @param true_values The true value of the parameter.
 #' @param not_cap Logical. If \code{TRUE}, it returns the pairs of 95% CI, which do not contain the true parameter. Otherwise, it returns mean of the means, standard deviations and the proportion of 95% CIs captures the true parameter.
+#' @return Mean, standard deviation, 95% coverage of the list for a single parameter.
 #' @export
 
 
 summary_stan = function(result_list, index, true_value, not_cap = FALSE)
 {
-  result = lapply(result_list, function(x) extract(x))
+  result = lapply(result_list, function(x) rstan::extract(x))
   temp1 = lapply(result, function(x) quantile(x[[index]], 0.025))
   temp2 = lapply(result, function(x) quantile(x[[index]], 0.975))
   temp3 = as.numeric( temp1 < rep(true_value, length(lengths(result))) & rep(true_value, length(lengths(result))) < temp2 )
@@ -25,6 +26,7 @@ summary_stan = function(result_list, index, true_value, not_cap = FALSE)
     mat = matrix(c(temp1[ret], temp2[ret]), ncol = 2)
     return(list(ret, mat))
     }else{
+      foo = unlist( lapply(result, function(x) mean(x[[index]])) )
       mn = mean(foo)
       sd = mean(unlist( lapply(result, function(x) sd(x[[index]])) ))
       covg = mean(temp3)

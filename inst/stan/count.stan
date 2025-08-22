@@ -28,8 +28,6 @@ parameters {
   real<lower = 0, upper = 1.0> r;
 }
 transformed parameters{
-  real<lower = 0> R0;
-  R0 = b/g;
 }
 model{
   real parms[3];//

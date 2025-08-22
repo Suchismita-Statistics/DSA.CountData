@@ -10,36 +10,21 @@ functions{
       return dydt;
       }
 }
-
 data{
   int<lower = 0> N; // initial susceptible
   int<lower = 0> K; // newly infected
-  int<lower = 0> L; // recovered among K
-  int<lower = 0> M; // initial infected
-
-
-  real<lower = 0> T_max;
   real<lower = 0> t0;
-  real<lower = 0> infection_times[K+1];
-  real<lower = 0> w[K];
-  int<lower = 0> L_tilde;
-  real<lower = 0> epsilon[L_tilde];
+  real<lower = 0> infection_time[K+1];
 }
-
 transformed data {
   real x_r[0];
   int x_i[0];
 }
-
 parameters {
   real<lower = 0> b;
   real<lower = 0> g;
   real<lower = 0, upper = 1.0> r;
 }
-transformed parameters{
-
-}
-
 model{
   real parms[3];
   real ic[2];
@@ -53,17 +38,13 @@ model{
   ic[1] = 1.0;
   ic[2] = r;
 
-  s = integrate_ode_rk45(two_ode, ic, t0, infection_times, parms, x_r, x_i, 1e-8, 1e-8, 1e6);
+  s = integrate_ode_rk45(two_ode, ic, t0, infection_time, parms, x_r, x_i);
 
   smax = s[K+1, 1];
 
   for(i in 1:K){
-    target += log(s[i, 1]) + log(s[i, 2]) - g*w[i] + log(b);
+    target += log(s[i, 1]) + log(s[i, 2]) + log(b);
   }
-  for(i in 1:L_tilde)
-  {
-    target += log(g) -  g*epsilon[i];
-  }
-  target += +(N - K)*log(smax) + L*log(g) - g*(M - L_tilde)*T_max + gamma_lpdf(b | 0.1, 0.1) + gamma_lpdf(g | 0.1, 0.1) + gamma_lpdf(r | 0.1, 0.1);
+  target += +(N-K)*log(smax) + gamma_lpdf(b | 0.1, 0.1) + gamma_lpdf(g | 0.1, 0.1) + gamma_lpdf(r | 0.1, 0.1);
 }
 

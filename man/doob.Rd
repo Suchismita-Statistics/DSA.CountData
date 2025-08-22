@@ -11,7 +11,7 @@ doob(N, beta, rho, gamma, Tmax)
 
 \item{beta}{Numeric. Infection rate parameter.}
 
-\item{rho}{Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < \code{rho} < 1.}
+\item{rho}{Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 <  \eqn{\rho}{rho} < 1.}
 
 \item{gamma}{Numeric. Recovery rate parameter.}
 

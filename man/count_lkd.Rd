@@ -34,7 +34,7 @@ count_lkd(
 }
 \value{
 An object of class \code{stanfit} returned by \code{rstan::sampling()},
-containing the posterior samples for the parameters \code{beta}, \code{gamma}, \code{rho}, and \code{R_0}.#' @export
+containing the posterior samples for the parameters \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho}.
 }
 \description{
 This function takes a matrix or data frame whose first column contains exact infection times.

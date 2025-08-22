@@ -11,7 +11,7 @@ f_tau_fr(beta, gamma, rho, nu, Tmax, dt = 0.1)
 
 \item{gamma}{Numeric. Recovery rate parameter.}
 
-\item{rho}{Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < rho < 1.}
+\item{rho}{Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < \eqn{\rho}{rho} < 1.}
 
 \item{nu}{Numeric. A parameter denoting the standard deviation of the frailty variable which is assumed to follow Gamma distribution.}
 

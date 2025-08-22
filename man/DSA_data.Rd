@@ -4,7 +4,7 @@
 \alias{DSA_data}
 \title{DSA_data}
 \usage{
-DSA_data(n, beta, gamma, rho, Tmax, dt = 0.01)
+DSA_data(n, beta, gamma, rho, Tmax, dt = 0.1)
 }
 \arguments{
 \item{n}{Interger. Number of initial susceptible.}
@@ -17,10 +17,10 @@ DSA_data(n, beta, gamma, rho, Tmax, dt = 0.01)
 
 \item{Tmax}{Numeric. Final observation time of epidemic}
 
-\item{dt}{Numeric. time increment}
+\item{dt}{Numeric. time increment. Default is 0.1.}
 }
 \value{
-A data set with two columns - exact infection times and recovery times respectively
+A data set with two columns - exact infection times and recovery times respectively.
 }
 \description{
 Generates a data set of exact infection and recovery times according to DSA approximation for simulating epidemic trajectories.

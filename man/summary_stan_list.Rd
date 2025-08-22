@@ -9,10 +9,13 @@ summary_stan_list(result_list, true_value, notcap = FALSE)
 \arguments{
 \item{result_list}{List of \code{stanfit} objects that we want to summarize.}
 
-\item{true_values}{Vector of true values of the parameters in the order beta, gamma, rho, R0.}
+\item{true_values}{Vector of true values of the parameters in the order \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho} respectively.}
 
 \item{not_cap}{Logical. If TRUE, it returns the pairs of 95% CI for all four parameters, which do not contain the true parameter. Otherwise, it returns mean of the means, standard deviations and the proportion of 95% CIs captures the true parameter for all four parameters.}
 }
+\value{
+Means, standard deviations, 95% coverages of the list for all parameters.
+}
 \description{
-It runs summary_stan functions for all four parameters - beta, gamma, rho, R0 and returns in the form of a matrix.
+It runs summary_stan functions for all four parameters - \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho} and returns in the form of a matrix. It can also return the CIs that do not contain the true parameters if notcap = TRUE.
 }

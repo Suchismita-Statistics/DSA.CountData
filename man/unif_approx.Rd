@@ -18,7 +18,7 @@ unif_approx(
 \arguments{
 \item{data}{Matrix/Data Frame with first column continuous infection times.}
 
-\item{T.max_analysis}{Numeric. Final observation time of epidemic}
+\item{T.max_analysis}{Numeric. Final observation time of epidemic.}
 
 \item{iteration}{Integer. The number of iterations for each chain (including warmup). The default is 10000.}
 
@@ -32,7 +32,7 @@ unif_approx(
 }
 \value{
 An object of class \code{stanfit} returned by \code{rstan::sampling()},
-containing the posterior samples for the parameters \code{beta}, \code{gamma}, \code{rho}, and \code{R_0}.
+containing the posterior samples for the parameters \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho}.
 }
 \description{
 Taking a matrix or data frame with exact infection times in first column, the function prepares a data set keeping only infection count, then do inference of parameters using Stan assuming the infection is uniformly distributed throughout the day.

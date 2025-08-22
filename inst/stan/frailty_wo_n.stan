@@ -34,8 +34,7 @@ parameters {
 }
 
 transformed parameters{
-  real<lower = 1, upper = 50> R0;
-  R0 = 6*b;
+
 }
 
 model{

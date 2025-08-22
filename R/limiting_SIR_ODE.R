@@ -8,7 +8,7 @@
 #' @import mcmcse
 #' @param beta Numeric. Infection rate parameter.
 #' @param gamma Numeric. Recovery rate parameter.
-#' @param rho Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < rho < 1.
+#' @param rho Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < \eqn{\rho}{rho} < 1.
 #' @param Tmax Numeric. Final observation time of epidemic
 #' @param dt Numeric. time increment
 #' @return Returns the limiting SIR ODEs.

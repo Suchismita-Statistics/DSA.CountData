@@ -11,7 +11,7 @@ limiting_SIR_ODE(beta, gamma, rho, Tmax, dt = 0.01)
 
 \item{gamma}{Numeric. Recovery rate parameter.}
 
-\item{rho}{Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < rho < 1.}
+\item{rho}{Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < \eqn{\rho}{rho} < 1.}
 
 \item{Tmax}{Numeric. Final observation time of epidemic}
 
