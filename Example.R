@@ -56,7 +56,7 @@ for(i in 1:50)
   uniform_result[[i]] = unif_approx(data_sellke[[i]], T.max_analysis = 10, frailty = FALSE)
 
   ## Do inference using complete likelihood when exact infection and recovery times are available
-  full_result[[i]] = full_lkd(data_sellke[[i]], T.max_analysis = 10, frailty = FALSE)
+  full_result[[i]] = full_lkd(data_sellke[[i]], T.max_analysis = 10)
 }
 
 
