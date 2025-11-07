@@ -17,7 +17,7 @@
 #' @export
 
 
-unif_approx = function(data, T.max_analysis, frailty = FALSE,
+unif_approx = function(data, T.max_analysis,
                        iteration = 1e4, num_chain = 4, num_cores = 1, stan_seed = 12, stan_warmup = 0)
 {
   initial_sus = data[data[, 1] != 0, ]
