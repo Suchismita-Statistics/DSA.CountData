@@ -1,6 +1,10 @@
 # DSA.CountData
 To install:
-install.packages("devtools");devtools::install_github("Suchismita-Statistics/DSA.CountData")
+
+```
+install.packages("devtools")
+devtools::install_github("Suchismita-Statistics/DSA.CountData")
+```
 
 # About the package
 
