@@ -52,8 +52,8 @@ for(i in 1:50)
   ## Do inference using count likelihood when only daily infection counts are available
   count_result[[i]] = count_lkd(data_sellke[[i]], T.max_analysis = 10, frailty = FALSE)
 
-  ## Do inference when only daily infection counts are available assuming infection times are uniformly distributed throughout the day
-  uniform_result[[i]] = unif_approx(data_sellke[[i]], T.max_analysis = 10, frailty = FALSE)
+  ## Do inference when only daily infection counts are available, assuming infection times are uniformly distributed throughout the day
+  uniform_result[[i]] = unif_approx(data_sellke[[i]], T.max_analysis = 10)
 
   ## Do inference using complete likelihood when exact infection and recovery times are available
   full_result[[i]] = full_lkd(data_sellke[[i]], T.max_analysis = 10)
