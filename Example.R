@@ -63,4 +63,4 @@ for(i in 1:50)
 
 ######
 summary_stan( result_list = count_result, index = 1, true_value = 2 )
-summary_stan_list(result_list, true_value = c(2, 0.5, 0.05))
+summary_stan_list(result_list = count_result, true_value = c(2, 0.5, 0.05))
