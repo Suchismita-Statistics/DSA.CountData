@@ -15,7 +15,6 @@ functions{
 data{
   int<lower = 0> N;
    int<lower = 0> K; // newly infected
-  real<lower = 0> T_max;
   int<lower = 0> T_max_int;
   int<lower = 0> infection_count[T_max_int];
   real t0;
