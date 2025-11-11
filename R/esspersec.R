@@ -14,6 +14,6 @@ esspersec = function(result)
 {
   res_sum = summary(result)
   ess = res_sum$summary[, "n_eff"]
-  time = sum( get_elapsed_time(result)[, 2])
-  return(ess/time)
+  time = sum(get_elapsed_time(result)[, 2])
+  return(ess / time)
 }

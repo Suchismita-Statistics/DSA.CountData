@@ -19,7 +19,14 @@
 #' @return An object of class \code{stanfit} returned by \code{rstan::sampling()},
 #' containing the posterior samples for the parameters \eqn{\beta}{beta}, \eqn{\gamma}{gamma}, \eqn{\rho}{rho}.
 #' @export
-count_lkd = function(data, T.max_analysis = 10, frailty = FALSE,  iteration = 1e4, num_chain = 4, num_cores = 1, stan_seed = 12, stan_warmup = 0)
+count_lkd = function(data,
+                     T.max_analysis = 10,
+                     frailty = FALSE,
+                     iteration = 1e4,
+                     num_chain = 4,
+                     num_cores = 1,
+                     stan_seed = 12,
+                     stan_warmup = 0)
 {
   initial_sus = data[data[, 1] != 0, ]
   N = dim(initial_sus)[1]
@@ -34,23 +41,38 @@ count_lkd = function(data, T.max_analysis = 10, frailty = FALSE,  iteration = 1e
   infection_count = as.vector(table(floor(t)))
   inf_time_final = numeric(length = T.max_analysis)
 
-  inf_time_final[infection_days+1] = infection_count
+  inf_time_final[infection_days + 1] = infection_count
 
-  K= nrow(infect_during_ep)
-  if(stan_warmup == 0)
+  K = nrow(infect_during_ep)
+  if (stan_warmup == 0)
   {
-    stan_warmup = floor(iteration/2)
+    stan_warmup = floor(iteration / 2)
   }
   if (frailty == TRUE) {
-   stan_file = system.file("stan", "frailty_count.stan", package = "DSA.CountData")
+    stan_file = system.file("stan", "frailty_count.stan", package = "DSA.CountData")
   } else {
-   stan_file = system.file("stan", "count.stan", package = "DSA.CountData")
+    stan_file = system.file("stan", "count.stan", package = "DSA.CountData")
   }
 
-    sm = rstan::stan_model(file = stan_file)
+  sm = rstan::stan_model(file = stan_file)
 
-  data_stan_full = list(N = N, K = K, T_max = T.max_analysis, T_max_int = T.max_analysis, infection_count = inf_time_final, t0 = 0, int_time = 1:T.max_analysis)
-  fit_full = rstan::sampling(sm, data = data_stan_full, iter = iteration,
-                             chain = num_chain, cores = num_cores, seed = stan_seed, warmup = stan_warmup)
+  data_stan_full = list(
+    N = N,
+    K = K,
+    T_max = T.max_analysis,
+    T_max_int = T.max_analysis,
+    infection_count = inf_time_final,
+    t0 = 0,
+    int_time = 1:T.max_analysis
+  )
+  fit_full = rstan::sampling(
+    sm,
+    data = data_stan_full,
+    iter = iteration,
+    chain = num_chain,
+    cores = num_cores,
+    seed = stan_seed,
+    warmup = stan_warmup
+  )
   return(fit_full)
 }

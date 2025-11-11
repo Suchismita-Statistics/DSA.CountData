@@ -24,7 +24,7 @@ doob = function(N, beta, rho, gamma, Tmax)
   time_tracker = numeric()
 
   S[1] = N
-  I[1] = round(N*rho)
+  I[1] = round(N * rho)
   R[1] = 0
 
   lambda_I = numeric()
@@ -36,34 +36,41 @@ doob = function(N, beta, rho, gamma, Tmax)
   time_tracker[1] = 0
   h = 1
   while (tail(time_tracker, 1) < Tmax && S[k] > 0 && I[k] > 0) {
-    lambda_I[k+1] = beta*S[k]*I[k]/N
-    lambda_R[k+1] = gamma*I[k]
+    lambda_I[k + 1] = beta * S[k] * I[k] / N
+    lambda_R[k + 1] = gamma * I[k]
 
-    lambda_s = lambda_I[k+1] + lambda_R[k+1]
-    if (lambda_s == 0) break
+    lambda_s = lambda_I[k + 1] + lambda_R[k + 1]
+    if (lambda_s == 0)
+      break
 
     time_tracker[k + 1] = time_tracker[k] + rexp(1, lambda_s)
-    p = lambda_I[k+1]/lambda_s
+    p = lambda_I[k + 1] / lambda_s
     inf_or_rec = rbinom(1, size = 1, prob = p)
     #print(frailty)
 
-    if(inf_or_rec == 1)
+    if (inf_or_rec == 1)
     {
-      S[k+1] = S[k] - 1
-      I[k+1] = I[k] + 1
-      R[k+1] = R[k]
+      S[k + 1] = S[k] - 1
+      I[k + 1] = I[k] + 1
+      R[k + 1] = R[k]
 
       #frailty = frailty[-1]
-      h = h+1
-      infection_time = c(infection_time, time_tracker[k+1])
-    }else{
-      S[k+1] = S[k]
-      I[k+1] = I[k] - 1
-      R[k+1] = R[k] + 1
-      recovery_time = c(recovery_time, time_tracker[k+1])
+      h = h + 1
+      infection_time = c(infection_time, time_tracker[k + 1])
+    } else{
+      S[k + 1] = S[k]
+      I[k + 1] = I[k] - 1
+      R[k + 1] = R[k] + 1
+      recovery_time = c(recovery_time, time_tracker[k + 1])
     }
-    k = k+1
+    k = k + 1
     # print(k)
   }
-  return(list(infection_time = infection_time, recovery_time = recovery_time, S = S, I = I, R = R))
+  return(list(
+    infection_time = infection_time,
+    recovery_time = recovery_time,
+    S = S,
+    I = I,
+    R = R
+  ))
 }

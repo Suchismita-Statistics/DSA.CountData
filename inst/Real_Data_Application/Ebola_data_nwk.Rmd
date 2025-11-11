@@ -129,21 +129,35 @@ generated quantities{
 
 
 ```{r}
-file.name= "EVD_Wave3.csv"
+file.name = "EVD_Wave3.csv"
 ebola = read.csv(file.name)
 t = ebola[ebola[, 3] != 0, 1]
- inf_table = table(floor(t))
- inf_ct = as.vector(inf_table)
-  infection_days = as.numeric(names(inf_table))
+inf_table = table(floor(t))
+inf_ct = as.vector(inf_table)
+infection_days = as.numeric(names(inf_table))
 
-   nwk_ct =  stan_model(model_code = sir_nwk ) 
-    nwk_data = list(K = 3079, inf_len = length(inf_ct), infection_count = inf_ct, t0 = 0, int_time = 1:108) ## 1068 + previous two wave inf_sum
-    
-     init_values <- function() {
+nwk_ct =  stan_model(model_code = sir_nwk)
+nwk_data = list(
+  K = 3079,
+  inf_len = length(inf_ct),
+  infection_count = inf_ct,
+  t0 = 0,
+  int_time = 1:108
+) ## 1068 + previous two wave inf_sum
+
+init_values <- function() {
   list(b = 0.2, g = 0.1, r = 0.001)
 }
-  fit = sampling(nwk_ct, data = nwk_data, iter = 50000, chain = 4, cores = 4, 
-                 seed = 1234, control=list(adapt_delta=.9), init = list(init_values(), init_values(), init_values(), init_values() ) )
+fit = sampling(
+  nwk_ct,
+  data = nwk_data,
+  iter = 50000,
+  chain = 4,
+  cores = 4,
+  seed = 1234,
+  control = list(adapt_delta = .9),
+  init = list(init_values(), init_values(), init_values(), init_values())
+)
 
 ```
 

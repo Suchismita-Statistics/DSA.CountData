@@ -22,15 +22,20 @@ limiting_SIR_ODE = function(beta, gamma, rho, Tmax, dt = 0.01)
   state  = c(S = 1, I = rho, R = 0)
 
 
-  Lorenz = function(t, state, parameters){
-    with(as.list(c(state, parameters)),{
+  Lorenz = function(t, state, parameters) {
+    with(as.list(c(state, parameters)), {
       ## rate of change
-      dS = -beta*S*I
-      dI = beta*S*I - gamma*I
-      dR = gamma*I
+      dS = -beta * S * I
+      dI = beta * S * I - gamma * I
+      dR = gamma * I
       list(c(dS, dI, dR))
     })
   }
-  out <- deSolve::ode(y = state, times = time_pts, func = Lorenz, parms = parameters)
+  out <- deSolve::ode(
+    y = state,
+    times = time_pts,
+    func = Lorenz,
+    parms = parameters
+  )
   return(out)
 }

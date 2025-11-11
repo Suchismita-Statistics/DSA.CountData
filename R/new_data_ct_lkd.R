@@ -21,41 +21,68 @@
 #' @export
 
 
-new_data_ct_lkd = function(time_points, infection_count, Final_time, initial_sus = 0, frailty = FALSE,
-                           iteration = 1e4, num_chain = 4, num_cores = 1, stan_seed = 12, stan_warmup = 0)
+new_data_ct_lkd = function(time_points,
+                           infection_count,
+                           Final_time,
+                           initial_sus = 0,
+                           frailty = FALSE,
+                           iteration = 1e4,
+                           num_chain = 4,
+                           num_cores = 1,
+                           stan_seed = 12,
+                           stan_warmup = 0)
 {
   K = sum(infection_count)
 
-  if(Final_time%%1 != 0)
+  if (Final_time %% 1 != 0)
   {
     Final_time = ceiling(Final_time)
   }
-  if(initial_sus == 0)
+  if (initial_sus == 0)
   {
-    if(frailty == FALSE)
+    if (frailty == FALSE)
     {
       stan_file = system.file("stan", "count_wo_n.stan", package = "DSA.CountData")
-    }else{
+    } else{
       stan_file = system.file("stan", "frailty_wo_n.stan", package = "DSA.CountData")
     }
-    data_stan_full = list( inf_len = length(infection_count), infection_count = infection_count, K = K, t0 = 0, int_time = time_points)
-  }else{
-    if(frailty == FALSE)
+    data_stan_full = list(
+      inf_len = length(infection_count),
+      infection_count = infection_count,
+      K = K,
+      t0 = 0,
+      int_time = time_points
+    )
+  } else{
+    if (frailty == FALSE)
     {
       stan_file = system.file("stan", "count.stan", package = "DSA.CountData")
-    }else{
+    } else{
       stan_file = system.file("stan", "frailty_count.stan", package = "DSA.CountData")
     }
 
-    data_stan_full = list(N = initial_sus, K = K, T_max_int = Final_time, infection_count = infection_count, t0 = 0, int_time = time_points)
+    data_stan_full = list(
+      N = initial_sus,
+      K = K,
+      T_max_int = Final_time,
+      infection_count = infection_count,
+      t0 = 0,
+      int_time = time_points
+    )
   }
-  if(stan_warmup == 0)
+  if (stan_warmup == 0)
   {
-    stan_warmup = floor(iteration/2)
+    stan_warmup = floor(iteration / 2)
   }
   sm = rstan::stan_model(file = stan_file)
-    fit_full = rstan::sampling(sm, data = data_stan_full, iter = iteration, chain = num_chain, cores = num_cores, seed = stan_seed, warmup = stan_warmup)
-   return(fit_full)
+  fit_full = rstan::sampling(
+    sm,
+    data = data_stan_full,
+    iter = iteration,
+    chain = num_chain,
+    cores = num_cores,
+    seed = stan_seed,
+    warmup = stan_warmup
+  )
+  return(fit_full)
 }
-
-

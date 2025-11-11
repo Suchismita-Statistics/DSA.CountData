@@ -17,21 +17,25 @@
 
 limiting_frailty_ODE = function(beta, gamma, rho, nu, Tmax, dt = 0.01)
 {
-
   time_pts = seq(0, Tmax, by = dt)
   parameters = c(beta, gamma, rho, nu)
   state  = c(S = 1, I = rho, R = 0)
 
 
-  Lorenz = function(t, state, parameters){
-    with(as.list(c(state, parameters)),{
+  Lorenz = function(t, state, parameters) {
+    with(as.list(c(state, parameters)), {
       ## rate of change
-      dS = -beta*(S^(1+nu^2))*I
-      dI = beta*(S^(1+nu^2))*I - gamma*I
-      dR = gamma*I
+      dS = -beta * (S ^ (1 + nu ^ 2)) * I
+      dI = beta * (S ^ (1 + nu ^ 2)) * I - gamma * I
+      dR = gamma * I
       list(c(dS, dI, dR))
     })
   }
-  out <- deSolve::ode(y = state, times = time_pts, func = Lorenz, parms = parameters)
+  out <- deSolve::ode(
+    y = state,
+    times = time_pts,
+    func = Lorenz,
+    parms = parameters
+  )
   return(out)
 }

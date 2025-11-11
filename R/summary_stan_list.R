@@ -14,16 +14,35 @@
 
 summary_stan_list = function(result_list, true_value, notcap = FALSE)
 {
-  para_beta = summary_stan(result_list, index = 1, true_value = true_value[1], not_cap = notcap)
-  para_gamma = summary_stan(result_list, index = 2, true_value = true_value[2], not_cap = notcap)
-  para_rho = summary_stan(result_list, index = 3, true_value = true_value[3], not_cap = notcap)
+  para_beta = summary_stan(
+    result_list,
+    index = 1,
+    true_value = true_value[1],
+    not_cap = notcap
+  )
+  para_gamma = summary_stan(
+    result_list,
+    index = 2,
+    true_value = true_value[2],
+    not_cap = notcap
+  )
+  para_rho = summary_stan(
+    result_list,
+    index = 3,
+    true_value = true_value[3],
+    not_cap = notcap
+  )
   colnam = c("mean", "sd", "95% coverage")
-  if(notcap == FALSE){
-    mat = matrix(c(para_beta, para_gamma, para_rho), ncol = 3, byrow = TRUE)
+  if (notcap == FALSE) {
+    mat = matrix(c(para_beta, para_gamma, para_rho),
+                 ncol = 3,
+                 byrow = TRUE)
     colnames(mat) = colnam
     return(mat)
-  }else{
-    not_captured = list(beta = para_beta, gamma = para_gamma, rho = para_rho)
+  } else{
+    not_captured = list(beta = para_beta,
+                        gamma = para_gamma,
+                        rho = para_rho)
     return(not_captured)
   }
 }

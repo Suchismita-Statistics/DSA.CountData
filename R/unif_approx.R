@@ -17,8 +17,13 @@
 #' @export
 
 
-unif_approx = function(data, T.max_analysis,
-                       iteration = 1e4, num_chain = 4, num_cores = 1, stan_seed = 12, stan_warmup = 0)
+unif_approx = function(data,
+                       T.max_analysis,
+                       iteration = 1e4,
+                       num_chain = 4,
+                       num_cores = 1,
+                       stan_seed = 12,
+                       stan_warmup = 0)
 {
   initial_sus = data[data[, 1] != 0, ]
   N = dim(initial_sus)[1]
@@ -33,24 +38,37 @@ unif_approx = function(data, T.max_analysis,
   infection_count = as.vector(table(floor(t)))
   inf_time_final = numeric(length = T.max_analysis)
 
-  inf_time_final[infection_days+1] = infection_count
+  inf_time_final[infection_days + 1] = infection_count
 
   approx_inf_time = list()
-  for(i in 1:T.max_analysis)
+  for (i in 1:T.max_analysis)
   {
-    approx_inf_time[[i]] = runif(inf_time_final[i], (i-1), i)
+    approx_inf_time[[i]] = runif(inf_time_final[i], (i - 1), i)
   }
 
-  K= nrow(infect_during_ep)
+  K = nrow(infect_during_ep)
   stan_file = system.file("stan", "unif_apx.stan", package = "DSA.CountData")
-  if(stan_warmup == 0)
+  if (stan_warmup == 0)
   {
-    stan_warmup = floor(iteration/2)
+    stan_warmup = floor(iteration / 2)
   }
 
   sm = rstan::stan_model(file = stan_file)
 
-  data_stan_full = list(N = N, K = K, t0 = 0, infection_time = c(sort(unlist(approx_inf_time)), T.max_analysis))
-  fit_full = rstan::sampling(sm, data = data_stan_full, iter = iteration, chain = num_chain, cores = num_cores, seed = stan_seed, warmup = stan_warmup)
+  data_stan_full = list(
+    N = N,
+    K = K,
+    t0 = 0,
+    infection_time = c(sort(unlist(approx_inf_time)), T.max_analysis)
+  )
+  fit_full = rstan::sampling(
+    sm,
+    data = data_stan_full,
+    iter = iteration,
+    chain = num_chain,
+    cores = num_cores,
+    seed = stan_seed,
+    warmup = stan_warmup
+  )
   return(fit_full)
 }

@@ -17,8 +17,8 @@
 sellke = function(n, beta, gamma, rho, Tmax)
 {
   Q = sort(rexp(n, rate = 1))
-  m = round(n*rho)
-  mattime = matrix(Tmax, ncol = 2, nrow = (n+m))
+  m = round(n * rho)
+  mattime = matrix(Tmax, ncol = 2, nrow = (n + m))
 
   mattime[1:m, 1] = rep(0, m)
   mattime[1:m, 2] = rexp(m, rate = gamma)
@@ -40,34 +40,35 @@ sellke = function(n, beta, gamma, rho, Tmax)
   Lambda_past = 0
 
 
-  while(I[k] > 0 && time_track[k] < Tmax && S[k] > 0)
+  while (I[k] > 0 && time_track[k] < Tmax && S[k] > 0)
   {
-    min_rec = min( subset(mattime[, 2], mattime[, 2] > time_track[k]))
-    Lambda_t = Lambda_past + beta*I[k]*(min_rec - time_track[k])/n
+    min_rec = min(subset(mattime[, 2], mattime[, 2] > time_track[k]))
+    Lambda_t = Lambda_past + beta * I[k] * (min_rec - time_track[k]) / n
 
-    if(Q[h] < Lambda_t)
+    if (Q[h] < Lambda_t)
     {
-      time_track[k+1] = time_track[k] + (Q[h] - Lambda_past)/(beta*I[k]/n)
-      S[k+1] = S[k] - 1
-      I[k+1] = I[k] + 1
-      R[k+1] = R[k]
-      mattime[m+h, 1] = time_track[k+1]
-      mattime[m+h, 2] = mattime[m+h, 1] + rexp(1, gamma)
-      min_rec = min( subset(mattime[, 2], mattime[, 2] > time_track[k+1]) )
+      time_track[k + 1] = time_track[k] + (Q[h] - Lambda_past) / (beta * I[k] /
+                                                                    n)
+      S[k + 1] = S[k] - 1
+      I[k + 1] = I[k] + 1
+      R[k + 1] = R[k]
+      mattime[m + h, 1] = time_track[k + 1]
+      mattime[m + h, 2] = mattime[m + h, 1] + rexp(1, gamma)
+      min_rec = min(subset(mattime[, 2], mattime[, 2] > time_track[k + 1]))
       Lambda_past = Q[h]
-      h = h+1
+      h = h + 1
       X = c(X, "inf")
-    }else{
-      time_track[k+1] = min_rec
-      S[k+1] = S[k]
-      I[k+1] = I[k] - 1
-      R[k+1] = R[k] + 1
+    } else{
+      time_track[k + 1] = min_rec
+      S[k + 1] = S[k]
+      I[k + 1] = I[k] - 1
+      R[k + 1] = R[k] + 1
 
-      min_rec = min( subset(mattime[, 2], mattime[, 2] > time_track[k+1]) )
+      min_rec = min(subset(mattime[, 2], mattime[, 2] > time_track[k + 1]))
       X = c(X, "rec")
       Lambda_past = Lambda_t
     }
-    k= k+1
+    k = k + 1
   }
   return(mattime)
 }

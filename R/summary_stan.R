@@ -15,21 +15,27 @@
 
 summary_stan = function(result_list, index, true_value, not_cap = FALSE)
 {
-  result = lapply(result_list, function(x) rstan::extract(x))
-  temp1 = lapply(result, function(x) quantile(x[[index]], 0.025))
-  temp2 = lapply(result, function(x) quantile(x[[index]], 0.975))
-  temp3 = as.numeric( temp1 < rep(true_value, length(lengths(result))) & rep(true_value, length(lengths(result))) < temp2 )
+  result = lapply(result_list, function(x)
+    rstan::extract(x))
+  temp1 = lapply(result, function(x)
+    quantile(x[[index]], 0.025))
+  temp2 = lapply(result, function(x)
+    quantile(x[[index]], 0.975))
+  temp3 = as.numeric(temp1 < rep(true_value, length(lengths(result))) &
+                       rep(true_value, length(lengths(result))) < temp2)
 
-  if(not_cap == TRUE)
+  if (not_cap == TRUE)
   {
     ret =  (1:length(result_list))[which(temp3 == 0)]
     mat = matrix(c(temp1[ret], temp2[ret]), ncol = 2)
     return(list(ret, mat))
-    }else{
-      foo = unlist( lapply(result, function(x) mean(x[[index]])) )
-      mn = mean(foo)
-      sd = mean(unlist( lapply(result, function(x) sd(x[[index]])) ))
-      covg = mean(temp3)
-      return(c(mn, sd, covg))
-    }
+  } else{
+    foo = unlist(lapply(result, function(x)
+      mean(x[[index]])))
+    mn = mean(foo)
+    sd = mean(unlist(lapply(result, function(x)
+      sd(x[[index]]))))
+    covg = mean(temp3)
+    return(c(mn, sd, covg))
+  }
 }

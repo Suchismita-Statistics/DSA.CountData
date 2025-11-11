@@ -15,30 +15,35 @@
 
 DSA_data = function(n, beta, gamma, rho, Tmax, dt = 0.1)
 {
-  m = n*rho
+  m = n * rho
   data_gen = matrix(0, nrow = (n + m), ncol = 2)
   time_pts = seq(0, Tmax, by = dt)
   parameters = c(beta, gamma, rho)
   state  = c(S = 1, I = rho, R = 0)
 
 
-  Lorenz = function(t, state, parameters){
-    with(as.list(c(state, parameters)),{
+  Lorenz = function(t, state, parameters) {
+    with(as.list(c(state, parameters)), {
       ## rate of change
-      dS = -beta*S*I
-      dI = beta*S*I - gamma*I
-      dR = gamma*I
+      dS = -beta * S * I
+      dI = beta * S * I - gamma * I
+      dR = gamma * I
       list(c(dS, dI, dR))
     })
   }
-  out <- ode(y = state, times = time_pts, func = Lorenz, parms = parameters)
+  out <- ode(
+    y = state,
+    times = time_pts,
+    func = Lorenz,
+    parms = parameters
+  )
   s_T = tail(out, 1)[2]
 
   u = runif(n)
   not_inf_during_epi = sum(as.numeric(u < s_T))
 
   u_infect = runif((n - not_inf_during_epi))
-  temp = u_infect*(1 - s_T ) + s_T
+  temp = u_infect * (1 - s_T) + s_T
   samples = approx(x = out[, 2], y = out[, 1], xout = temp)
 
   infect_times = samples$y
@@ -46,7 +51,7 @@ DSA_data = function(n, beta, gamma, rho, Tmax, dt = 0.1)
   # sum(as.numeric(infect_times>10))
   data_gen[, 1] = sort(c(rep(0, m), infect_times, rep(Tmax, not_inf_during_epi)))
 
-  data_gen[, 2] = data_gen[, 1] + rexp((n+m), rate = gamma)
+  data_gen[, 2] = data_gen[, 1] + rexp((n + m), rate = gamma)
 
   return(data_gen)
 }
