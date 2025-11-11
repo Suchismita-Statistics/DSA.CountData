@@ -12,7 +12,7 @@ This package aims to apply DSA models for count data. The SIR Model or frailty m
 
 This package contains all the R codes required to implement the paper.  
 new_data_ct_lkd() is the main function to apply count likelihood for a new daily count data, which simulates HMC posterior samples via stan. We used rstan::version 2.21.8.  
-Please look at the Example.R file to see the usage of the important functions.  
+Please look at the Example.R file to see the usage of the important functions. To do so, write the following code in the terminal:  
 
 ```
 git clone https://github.com/Suchismita-Statistics/DSA.CountData.git
