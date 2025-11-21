@@ -23,5 +23,5 @@ sellke(n, beta, gamma, rho, Tmax, nu = NULL)
 A data set with two columns - exact infection times and recovery times respectively.
 }
 \description{
-Generates a dataset using the Sellke construction for simulating epidemic trajectories. If \eqn{\nu}{nu} is specified, it simulate trajectories incorporating frailty variable.
+Generates a dataset using the Sellke construction for simulating epidemic trajectories. If \code{nu} is specified, it simulate trajectories incorporating frailty variable.
 }

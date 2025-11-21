@@ -1,6 +1,6 @@
 #' sellke
 #'
-#' Generates a dataset using the Sellke construction for simulating epidemic trajectories. If \eqn{\nu}{nu} is specified, it simulate trajectories incorporating frailty variable.
+#' Generates a dataset using the Sellke construction for simulating epidemic trajectories. If \code{nu} is specified, it simulate trajectories incorporating frailty variable.
 #' @import rstan
 #' @import deSolve
 #' @import ggplot2
