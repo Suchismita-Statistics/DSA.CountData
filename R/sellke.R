@@ -1,6 +1,6 @@
 #' sellke
 #'
-#' Generates a dataset using the Sellke construction for simulating epidemic trajectories.
+#' Generates a dataset using the Sellke construction for simulating epidemic trajectories. If \eqn{\nu}{nu} is specified, it simulate trajectories incorporating frailty variable.
 #' @import rstan
 #' @import deSolve
 #' @import ggplot2
@@ -9,14 +9,20 @@
 #' @param beta Numeric. Infection rate parameter.
 #' @param gamma Numeric. Recovery rate parameter.
 #' @param rho Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < rho < 1.
-#' @param Tmax Numeric. Final observation time of epidemic
+#' @param Tmax Numeric. Final observation time of epidemic.
+#' @param nu Numeric. A parameter denoting the standard deviation of the frailty variable which is assumed to follow Gamma distribution.
 #' @return  A data set with two columns - exact infection times and recovery times respectively.
 #' @export
 
 
-sellke = function(n, beta, gamma, rho, Tmax)
+sellke = function(n, beta, gamma, rho, Tmax, nu = NULL)
 {
-  Q = sort(rexp(n, rate = 1))
+  if(is.null(nu)){
+    Q = sort(rexp(n, rate = 1))
+  }else{
+    u = rgamma(n, shape = 1/nu^2, rate = 1/nu^2)
+    Q = sort(rexp(n, rate = u))
+  }
   m = round(n * rho)
   mattime = matrix(Tmax, ncol = 2, nrow = (n + m))
 

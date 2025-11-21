@@ -7,7 +7,6 @@
 unif_approx(
   data,
   T.max_analysis,
-  frailty = FALSE,
   iteration = 10000,
   num_chain = 4,
   num_cores = 1,

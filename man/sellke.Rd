@@ -4,7 +4,7 @@
 \alias{sellke}
 \title{sellke}
 \usage{
-sellke(n, beta, gamma, rho, Tmax)
+sellke(n, beta, gamma, rho, Tmax, nu = NULL)
 }
 \arguments{
 \item{n}{Interger. Number of initial susceptible.}
@@ -15,11 +15,13 @@ sellke(n, beta, gamma, rho, Tmax)
 
 \item{rho}{Numeric. Limiting proportion of initially infected individuals relative to the initially susceptible population. Must satisfy 0 < rho < 1.}
 
-\item{Tmax}{Numeric. Final observation time of epidemic}
+\item{Tmax}{Numeric. Final observation time of epidemic.}
+
+\item{nu}{Numeric. A parameter denoting the standard deviation of the frailty variable which is assumed to follow Gamma distribution.}
 }
 \value{
 A data set with two columns - exact infection times and recovery times respectively.
 }
 \description{
-Generates a dataset using the Sellke construction for simulating epidemic trajectories.
+Generates a dataset using the Sellke construction for simulating epidemic trajectories. If \eqn{\nu}{nu} is specified, it simulate trajectories incorporating frailty variable.
 }
