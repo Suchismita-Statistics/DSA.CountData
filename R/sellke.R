@@ -17,10 +17,10 @@
 
 sellke = function(n, beta, gamma, rho, Tmax, nu = NULL)
 {
-  if(is.null(nu)){
+  if (is.null(nu)) {
     Q = sort(rexp(n, rate = 1))
-  }else{
-    u = rgamma(n, shape = 1/nu^2, rate = 1/nu^2)
+  } else{
+    u = rgamma(n, shape = 1 / nu ^ 2, rate = 1 / nu ^ 2)
     Q = sort(rexp(n, rate = u))
   }
   m = round(n * rho)
