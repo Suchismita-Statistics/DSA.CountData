@@ -11,6 +11,7 @@
 #' @param data Matrix/Data Frame with first column continuous infection times.
 #' @param T.max_analysis  Numeric. Final observation time of epidemic
 #' @param frailty Logical. If \code{TRUE}, inference is performed using the frailty model; otherwise, the standard SIR model is used.
+#' @param init_list Give a list of initial values to pass in Sampling function of Stan. Its length will be equal to the number of parallel chains.
 #' @param iteration Integer. The number of iterations for each chain (including warmup). The default is 10000.
 #' @param num_chain Integer specifying the number of Markov chains. The default is 4.
 #' @param num_cores Same as "cores" in Sampling function of Stan. Default is 1.
@@ -22,6 +23,7 @@
 count_lkd = function(data,
                      T.max_analysis = 10,
                      frailty = FALSE,
+                     init_list = NULL,
                      iteration = 1e4,
                      num_chain = 4,
                      num_cores = 1,
@@ -65,14 +67,31 @@ count_lkd = function(data,
     t0 = 0,
     int_time = 1:T.max_analysis
   )
-  fit_full = rstan::sampling(
-    sm,
-    data = data_stan_full,
-    iter = iteration,
-    chain = num_chain,
-    cores = num_cores,
-    seed = stan_seed,
-    warmup = stan_warmup
-  )
+
+  if (is.null(init_list))
+  {
+    fit_full = rstan::sampling(
+      sm,
+      data = data_stan_full,
+      iter = iteration,
+      chain = num_chain,
+      cores = num_cores,
+      seed = stan_seed,
+      warmup = stan_warmup
+    )
+  } else{
+    fit_full = rstan::sampling(
+      sm,
+      data = data_stan_full,
+      iter = iteration,
+      chain = num_chain,
+      cores = num_cores,
+      seed = stan_seed,
+      warmup = stan_warmup,
+      init = init_list
+    )
+  }
+
+
   return(fit_full)
 }

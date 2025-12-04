@@ -8,6 +8,7 @@ count_lkd(
   data,
   T.max_analysis = 10,
   frailty = FALSE,
+  init_list = NULL,
   iteration = 10000,
   num_chain = 4,
   num_cores = 1,
@@ -21,6 +22,8 @@ count_lkd(
 \item{T.max_analysis}{Numeric. Final observation time of epidemic}
 
 \item{frailty}{Logical. If \code{TRUE}, inference is performed using the frailty model; otherwise, the standard SIR model is used.}
+
+\item{init_list}{Give a list of initial values to pass in Sampling function of Stan. Its length will be equal to the number of parallel chains.}
 
 \item{iteration}{Integer. The number of iterations for each chain (including warmup). The default is 10000.}
 

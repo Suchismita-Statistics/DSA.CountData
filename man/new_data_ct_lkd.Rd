@@ -9,6 +9,7 @@ new_data_ct_lkd(
   infection_count,
   Final_time,
   initial_sus = 0,
+  init_list = NULL,
   frailty = FALSE,
   iteration = 10000,
   num_chain = 4,
@@ -25,6 +26,8 @@ new_data_ct_lkd(
 \item{Final_time}{Numeric. Final observation time of epidemic.}
 
 \item{initial_sus}{If available, give the initial number of susceptible, otherwise, put 0.}
+
+\item{init_list}{Give a list of initial values to pass in Sampling function of Stan. Its length will be equal to the number of parallel chains.}
 
 \item{frailty}{Logical. If True, makes inference using frailty model and standard SIR model otherwise.}
 

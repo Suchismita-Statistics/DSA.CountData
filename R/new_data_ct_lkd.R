@@ -10,6 +10,7 @@
 #' @param infection_count A vector of integers giving the infection counts. We suggest to keep the time points equally spaced between one to the final time and adjust the infection count vector such that it takes value zero, if we do not observe infections in some of the days.
 #' @param Final_time Numeric. Final observation time of epidemic.
 #' @param initial_sus If available, give the initial number of susceptible, otherwise, put 0.
+#' @param init_list Give a list of initial values to pass in Sampling function of Stan. Its length will be equal to the number of parallel chains.
 #' @param frailty Logical. If True, makes inference using frailty model and standard SIR model otherwise.
 #' @param iteration Integer. The number of iterations for each chain (including warmup). The default is 10000.
 #' @param num_chain Integer specifying the number of Markov chains. The default is 4.
