@@ -25,6 +25,7 @@ new_data_ct_lkd = function(time_points,
                            infection_count,
                            Final_time,
                            initial_sus = 0,
+                           init_list = NULL,
                            frailty = FALSE,
                            iteration = 1e4,
                            num_chain = 4,
@@ -75,14 +76,30 @@ new_data_ct_lkd = function(time_points,
     stan_warmup = floor(iteration / 2)
   }
   sm = rstan::stan_model(file = stan_file)
-  fit_full = rstan::sampling(
-    sm,
-    data = data_stan_full,
-    iter = iteration,
-    chain = num_chain,
-    cores = num_cores,
-    seed = stan_seed,
-    warmup = stan_warmup
-  )
+
+  if (is.null(init_list))
+  {
+    fit_full = rstan::sampling(
+      sm,
+      data = data_stan_full,
+      iter = iteration,
+      chain = num_chain,
+      cores = num_cores,
+      seed = stan_seed,
+      warmup = stan_warmup
+    )
+  } else{
+    fit_full = rstan::sampling(
+      sm,
+      data = data_stan_full,
+      iter = iteration,
+      chain = num_chain,
+      cores = num_cores,
+      seed = stan_seed,
+      warmup = stan_warmup,
+      init = init_list
+    )
+  }
+
   return(fit_full)
 }

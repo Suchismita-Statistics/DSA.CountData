@@ -17,6 +17,8 @@ infect_during_ep = subset(initial_sus, initial_sus[, 1] < T.max_analysis)
 t = infect_during_ep[, 1]
 
 
+
+
 #### We make the time point vector all integers between one to the final time and will adjust the vector of infection count so that,
 ## if we do not observe infections in a day, if will take value zero there.
 table_t = table(floor(t))
@@ -26,10 +28,31 @@ inf_time_final = numeric(length = T.max_analysis)
 
 inf_time_final[infection_days + 1] = infection_count
 
+
+## Optional: Give your initial guess, if you want to. Otherwise, the function will simulate a random start point.
+## However, if your observation time window is large, we recommend to give an initial guess.
+
+single_init <- list(b = 0.2, g = 0.1, r = 0.001)
+
+## Optional: Calculating number of cores to run parallel HMC chains. It is optional. One can run parallel chain with a
+## single core (put stan_core = 1). It is just to make the code faster.
+
+core_num = parallel::detectCores()
+stan_core = min((core_num - 2), 4)
+
+
+init_guess <- replicate(stan_core, single_init, simplify = FALSE)
+
+
 out = new_data_ct_lkd(
   time_points = 1:T.max_analysis,
   infection_count = inf_time_final,
-  Final_time = T.max_analysis
+  Final_time = T.max_analysis,
+  init_list = init_guess,
+  frailty = FALSE,
+  iteration = 1e4,
+  num_chain = stan_core,
+  num_cores = stan_core
 )
 
 

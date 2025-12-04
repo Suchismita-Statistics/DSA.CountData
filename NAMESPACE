@@ -19,4 +19,5 @@ import(deSolve)
 import(ggplot2)
 import(mcmcse)
 import(rstan)
+import(parallel)
 
