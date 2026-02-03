@@ -20,8 +20,8 @@ t = infect_during_ep[, 1]
 
 
 
-#### We make the time point vector all integers between one to the final time and will adjust the vector of infection count so that,
-## if we do not observe infections in a day, if will take value zero there.
+#### We make the time point vector all integers between one and the final time, and will adjust the vector of infection count so that,
+## If we do not observe infections in a day, it will take the value zero there.
 table_t = table(floor(t))
 infection_days = as.numeric(names(table_t))
 infection_count = as.vector(table_t)
@@ -31,11 +31,11 @@ inf_time_final[infection_days + 1] = infection_count
 
 
 ## Optional: Give your initial guess, if you want to. Otherwise, the function will simulate a random start point.
-## However, if your observation time window is large, we recommend to give an initial guess.
+## However, if your observation time window is large, we recommend giving an initial guess.
 
 single_init <- list(b = 0.2, g = 0.1, r = 0.001)
 
-## Optional: Calculating number of cores to run parallel HMC chains. It is optional. One can run parallel chain with a
+## Optional: Calculating number of cores to run parallel HMC chains. It is optional. One can run parallel chains with a
 ## single core (put stan_core = 1). It is just to make the code faster.
 
 core_num = parallel::detectCores()
@@ -74,7 +74,7 @@ frailty_result = count_lkd(simulated_data,
                            frailty = TRUE)
 
 
-## One example of the simulation study without frailty. Make frailty =.TRUE for using frailty model.
+## One example of the simulation study without frailty. Make frailty = TRUE for using the frailty model.
 count_result = list()
 
 
@@ -106,8 +106,8 @@ for (i in 1:5)
 
 
 
-######
+###### 
 summary_stan(result_list = count_result,
              index = 1,
-             true_value = 2)
-summary_stan_list(result_list = count_result, true_value = c(2, 0.5, 0.05))
+             true_value = 2) ## Summarize the result of result_list: Gives average of posterior means, sds, and 95% frequentist coverage for beta (if index = 1), gamma (if index = 2), rho (if index = 3). 
+summary_stan_list(result_list = count_result, true_value = c(2, 0.5, 0.05))  ## Summarize the result of result_list: Gives average of posterior means, sds, and 95% frequentist coverage for parameters beta, gamma, rho in three rows respectively.
