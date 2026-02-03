@@ -1,5 +1,6 @@
 ## Analysis using simulated data
 library(DSA.CountData)
+set.seed(12)
 simulated_data = sellke(
   n = 1000,
   rho = 0.05,
