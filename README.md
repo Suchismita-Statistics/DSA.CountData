@@ -78,6 +78,8 @@ out = new_data_ct_lkd(
   num_cores = stan_core
 )
 
+## The folder Real Data Application contains all functions and the results involving Real Data Analysis: Ebola Data and the China Data.
+
 
 
 ```
