@@ -36,6 +36,9 @@ data{
   int<lower = 0> infection_count[inf_len]; 
   real t0;
   real int_time[inf_len];
+  
+  int<lower = 0> full_len;
+  real full_time[full_len];
 }
 
 transformed data {
@@ -94,6 +97,9 @@ generated quantities{
   vector[3] theta;
   real ode_sol[inf_len+1];
   
+  real s_full[full_len, 1];
+  real density[full_len];  
+  
   real ic[1];
   real s[(inf_len), 1];
   
@@ -120,6 +126,12 @@ generated quantities{
    
   tau = algebra_solver(solution, tau_init, theta, x_r, x_i);
    K_est = N_est*tau[1];
+   
+   s_full = integrate_ode_rk45(two_ode, ic, t0, full_time, parms, x_r, x_i);
+   for(i in 1:full_len)
+   {
+     density[i] = b*s_full[i, 1]*(1+rho - s_full[i, 1] + g*log(s_full[i, 1])/b)/tau[1]; 
+   }
 }
 
 
@@ -129,6 +141,7 @@ generated quantities{
 
 
 ```{r}
+library("rstan")
 file.name = "EVD_Wave3.csv"
 ebola = read.csv(file.name)
 t = ebola[ebola[, 3] != 0, 1]
@@ -137,17 +150,24 @@ inf_ct = as.vector(inf_table)
 infection_days = as.numeric(names(inf_table))
 
 nwk_ct =  stan_model(model_code = sir_nwk)
+full_time = seq(0.1, 108, 0.1)
+full_len = length(full_time)
+   
 nwk_data = list(
   K = 3079,
   inf_len = length(inf_ct),
   infection_count = inf_ct,
   t0 = 0,
-  int_time = 1:108
+  int_time = 1:108,
+  full_len = full_len, 
+  full_time = full_time
 ) ## 1068 + previous two wave inf_sum
 
 init_values <- function() {
   list(b = 0.2, g = 0.1, r = 0.001)
 }
+
+
 fit = sampling(
   nwk_ct,
   data = nwk_data,
@@ -159,6 +179,43 @@ fit = sampling(
   init = list(init_values(), init_values(), init_values(), init_values())
 )
 
+
 ```
+
+## Final Plot
+
+```{r}
+ext      <- extract(fit)
+den      <- ext$density        # matrix: n_draws x full_len
+
+den_mean <- apply(den, 2, mean)
+den_lo   <- apply(den, 2, quantile, probs = 0.025)
+den_hi   <- apply(den, 2, quantile, probs = 0.975)
+
+# ── Observed onset histogram ──────────────────────────────────────────────────
+pl_list <- vector("list", 108)
+for (i in 1:108)
+  pl_list[[i]] <- runif(inf_ct[i], i - 1, i)
+
+hist(unlist(pl_list),
+     probability = TRUE,
+     col         = "white",        # light grey looks cleaner than white
+     border      = "black",
+     breaks      = seq(0, 110, 10),
+      main        = "Comparison of Estimated Density and Observed Counts for Ebola Data",
+     xlab        = "Days",
+     ylab        = "Density",
+     ylim        = c(0, max(den_hi) * 1.1))
+
+# ── 95% credible band ─────────────────────────────────────────────────────────
+polygon(c(full_time, rev(full_time)),
+        c(den_lo,   rev(den_hi)),
+        col    = adjustcolor("red", alpha.f = 0.2),
+        border = NA)
+
+# ── Posterior mean density ────────────────────────────────────────────────────
+lines(full_time, den_mean, col = "red", lwd = 2)
+```
+
 
 
