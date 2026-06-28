@@ -1,14 +1,21 @@
 ## Ebola Data Analysis:
 Data Set: EVD_Wave3.csv
+
 Analysis: Ebola_data_nwk.Rmd
 
 ## Covid Data Analysis
 
 Data Set: new_incidence_china.csv
+
 Results of SIR Fit: sir_result_53_cities.csv
+
 Results of Frailty Fit: frailty_result_53_cities.csv
 
+
+
 Plots comparing the fits for 53 cities: Folder:fitted_plots
+
+
 
 Result comparisons: 
   Using Loo: "loo_comp.csv"
