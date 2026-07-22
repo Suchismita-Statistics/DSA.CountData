@@ -10,7 +10,7 @@ devtools::install_github("Suchismita-Statistics/DSA.CountData")
 
 This package aims to apply DSA models for count data. The SIR Model or frailty model can be used to infer about the parameters -  infection rate ($\beta$) and recovery rate ($\gamma$). It further estimates the limiting proportion of susceptible and infected ($\rho$). The DSA method does not necessarily require information on the number of initial susceptible individuals. It can also be estimated.  
 
-This package contains all the R codes required to implement the paper. The "Real_Data_Application" subfolder in the "inst" folder contains the real datasets and the results used in the paper.
+This package contains all the R codes required to implement the paper. 
 new_data_ct_lkd() is the main function to apply count likelihood for a new daily count data, which simulates HMC posterior samples via stan. We used rstan::version 2.21.8.  
 Please look at the Example.R file to see the usage of the important functions. To do so, write the following code in the terminal:  
 
@@ -43,7 +43,7 @@ t = infect_during_ep[, 1]
 
 
 #### Important: We make the time point vector all integers between one to the final time and will adjust the vector of infection count so that,
-## if we do not observe infections in a day, if will take value zero there.
+## if we do not observe infections in a day, it will take the value zero there.
 table_t = table(floor(t))
 infection_days = as.numeric(names(table_t))
 infection_count = as.vector(table_t)
