@@ -18,8 +18,6 @@ Plots comparing the fits for 53 cities: Folder:fitted_plots
 
 
 Result comparisons: 
-  Using Loo: "loo_comp.csv"
-  Using WAIC: "waic_comp.csv"
   Using DIC: "DIC_comp.csv"
   Using Bayes Factor: "bayes_factor_comp.csv"
 

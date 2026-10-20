@@ -205,7 +205,19 @@ generated quantities{
 ```
 
 ```{r}
-data = read.csv("new_incidence_china.csv")
+data_url <- "https://raw.githubusercontent.com/Suchismita-Statistics/DSA.CountData/main/Real_Data_Application/"
+
+read_data <- function(f) {
+  candidates <- c(f, file.path("Real_Data_Application", f))
+  hit <- candidates[file.exists(candidates)][1]
+  if (!is.na(hit)) return(read.csv(hit))
+  message("Local copy not found; downloading ", f, " from GitHub")
+  read.csv(paste0(data_url, f))
+}
+
+data = read_data("new_incidence_china.csv")
+
+# data = read.csv("new_incidence_china.csv")
 data_work = data[, -c(1:6)]
 total_inf_perday = apply(data_work, 2, sum)
 colnames(data_work)[1:41]
@@ -372,8 +384,8 @@ draw_hist = function(result_full, data_now, title)
   )
 }
 
-sample_run = run_real_data(data_now = MA_data_final[30, ])
-draw_hist(sample_run, MA_data_final[30, ], "Comparison of fits of Yichang City")
+sample_run = run_real_data(data_now = MA_data_final[34, ])
+draw_hist(sample_run, MA_data_final[34, ], "Comparison of fits of Yichang City")
 
 temp1 = summary_real(sample_run[[1]], F)
 M1 = matrix(temp1[[1]], nrow = 5, byrow = TRUE)
@@ -388,8 +400,11 @@ xtable::xtable(M2)
 ## Plotting the Results
 
 ```{r}
-sir_res = read.csv("sir_result_53_cities.csv")
-fr_res = read.csv("frailty_result_53_cities.csv")
+# sir_res = read.csv("sir_result_53_cities.csv")
+# fr_res = read.csv("frailty_result_53_cities.csv")
+
+sir_res = read_data("sir_result_53_cities.csv")
+fr_res = read_data("frailty_result_53_cities.csv")
 
 sir_mean = matrix(c(sir_res$beta_mean, sir_res$rho_mean), ncol = 2)
 fr_mean = matrix(c(fr_res$beta_mean, fr_res$rho_mean, fr_res$nu_mean), ncol = 3)
@@ -447,10 +462,8 @@ for (i in 1:53) {
 
 ```{r}
 # install.packages("bridgesampling")
-# install.packages("loo")
 
 library("bridgesampling")
-library("loo")
 
 
 print("Model:1 is SIR model and Model 2 is Frailty Model")
@@ -526,81 +539,6 @@ bf_comp = function(fit1, fit2)
 }
 
 bf_comp(sample_run[[1]], sample_run[[2]])
-
-### WAIC calculation
-
-waic_comp <- function(fit1, fit2){
-
-  log_lik_mat1 <- rstan::extract(fit1, pars = "log_lik")$log_lik
-  log_lik_mat2 <- rstan::extract(fit2, pars = "log_lik")$log_lik
-
-  waic1 <- loo::waic(log_lik_mat1)
-  waic2 <- loo::waic(log_lik_mat2)
-
-  w1 <- waic1$estimates["waic", "Estimate"]
-  w2 <- waic2$estimates["waic", "Estimate"]
-
-  p1 <- waic1$estimates["p_waic", "Estimate"]
-  p2 <- waic2$estimates["p_waic", "Estimate"]
-
-  better <- ifelse(w1 < w2, 1, 2)
- 
-  if(better == 1)
-  {
-    print("SIR Model is better")
-  }else{
-     print("Frailty Model is better")
-  }
-  
-  c(
-    WAIC1   = w1,
-    WAIC2   = w2,
-    Diff    = w2 - w1,
-    pWAIC1  = p1,
-    pWAIC2  = p2,
-    Better  = better
-  )
-}
-
-waic_comp(sample_run[[1]], sample_run[[2]])
-
-## Loo comparison
-
-loo_comp <- function(fit1, fit2){
-
-  log_lik_mat1 <- rstan::extract(fit1, pars = "log_lik")$log_lik
-  log_lik_mat2 <- rstan::extract(fit2, pars = "log_lik")$log_lik
-
-  loo1 <- loo::loo(log_lik_mat1)
-  loo2 <- loo::loo(log_lik_mat2)
-
-  comp <- loo::loo_compare(loo1, loo2)
-
-  better <- ifelse(
-  loo1$estimates["elpd_loo","Estimate"] >
-  loo2$estimates["elpd_loo","Estimate"],
-  1,
-  2
-)
-  if(better == 1)
-  {
-    print("SIR Model is better")
-  }else{
-     print("Frailty Model is better")
-  }
-
-  c(
-    ELPD1   = loo1$estimates["elpd_loo","Estimate"],
-    ELPD2   = loo2$estimates["elpd_loo","Estimate"],
-    Diff    = comp[2,"elpd_diff"],
-    SE_Diff = comp[2,"se_diff"],
-    Kgt1_M1 = sum(loo1$diagnostics$pareto_k > 1),
-    Kgt1_M2 = sum(loo2$diagnostics$pareto_k > 1),
-    Better  = better
-  )
-}
-
-loo_comp(sample_run[[1]], sample_run[[2]])
 
 ```
 

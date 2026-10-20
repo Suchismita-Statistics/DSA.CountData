@@ -143,7 +143,18 @@ generated quantities{
 ```{r}
 library("rstan")
 file.name = "EVD_Wave3.csv"
-ebola = read.csv(file.name)
+
+data_url <- "https://raw.githubusercontent.com/Suchismita-Statistics/DSA.CountData/main/Real_Data_Application/"
+
+read_data <- function(f) {
+  candidates <- c(f, file.path("Real_Data_Application", f))
+  hit <- candidates[file.exists(candidates)][1]
+  if (!is.na(hit)) return(read.csv(hit))
+  message("Local copy not found; downloading ", f, " from GitHub")
+  read.csv(paste0(data_url, f))
+}
+
+ebola = read_data(file.name)
 t = ebola[ebola[, 3] != 0, 1]
 inf_table = table(floor(t))
 inf_ct = as.vector(inf_table)
