@@ -78,9 +78,9 @@ out = new_data_ct_lkd(
   num_cores = stan_core
 )
 
-## The folder Real Data Application contains all functions and the results involving Real Data Analysis: Ebola Data and the Covid Data.
-
 
 
 ```
+
+### The folder Real Data Application contains all functions and the results involving Real Data Analysis: Ebola Data and the Covid Data. PDSIR_run.R and running_pomp.R give all the functions required to run PDSIR and the pmcmc functions used in this paper.
 
