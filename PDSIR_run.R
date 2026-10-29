@@ -117,13 +117,13 @@ extract_param = function(result,
 
 ## result_list: list of outputs of PDSIR_calc.
 ## init_sus: Initial number of susceptible.
-## true_val: True values of the parameters. A vector of three dimension with true value of R_0, beta, gamma respectively.
+## true_val: True values of the parameters. A vector of three dimension with true value of R_0, gamma, beta respectively.
 ## Tmax: Final observation time of epidemic.
 ## iter: Number of iteration of the chain.
 ## warmup: number of warm-yp samples. 50% by default.
 ## chain_num: Number of chains in each output
 
-## returns means, sds, 95% coverage and ESS of the parameters in the order R_0, beta, gamma respectively.
+## returns means, sds, 95% coverage and ESS of the parameters in the order R_0, gamma, beta respectively.
 
 
 

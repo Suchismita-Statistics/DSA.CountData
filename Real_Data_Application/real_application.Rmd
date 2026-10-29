@@ -205,6 +205,7 @@ generated quantities{
 ```
 
 ```{r}
+library(DSA.CountData)
 data_url <- "https://raw.githubusercontent.com/Suchismita-Statistics/DSA.CountData/main/Real_Data_Application/"
 
 read_data <- function(f) {
