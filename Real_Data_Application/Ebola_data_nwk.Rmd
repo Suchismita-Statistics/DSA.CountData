@@ -175,7 +175,7 @@ nwk_data = list(
 ) ## 1068 + previous two wave inf_sum
 
 init_values <- function() {
-  list(b = 0.2, g = 0.1, r = 0.001)
+  list(b = 0.2, g = 0.1, rho = 0.001)
 }
 
 

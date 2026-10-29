@@ -32,7 +32,7 @@ full_lkd = function(data, T.max_analysis, iteration = 1e4, num_chain = 4, num_co
   t = infect_during_ep[, 1]
   K = nrow(infect_during_ep)
 
-  w = apply(matrix(c(rep(10, K), infect_during_ep[, 2]), ncol = 2), 1, min) - infect_during_ep[, 1]
+  w = apply(matrix(c(rep(T.max_analysis, K), infect_during_ep[, 2]), ncol = 2), 1, min) - infect_during_ep[, 1]
 
   L = sum(initial_sus[, 1] < T.max_analysis & initial_sus[, 2] < T.max_analysis)
 

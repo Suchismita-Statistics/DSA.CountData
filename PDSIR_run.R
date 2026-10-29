@@ -5,7 +5,7 @@
 #devtools::install_github("rmorsomme/PDSIR")
 
 library(PDSIR)
-
+library(DSA.CountData)
 ## This function make inference using PDSIR method using one chain.
 ## data_Sellke: a matrix or data frame of two columns with continuous infection and recovery times.
 ## rho: Proportion of observations we want to update; Please look the paper for further details.
@@ -44,9 +44,8 @@ PDSIR_calc = function(data_Sellke,
   )
   R1 = b1 / g1
   theta1 <- list(R0 = R1, # basic reproduction number
-                 gamma = g1 # parameters of the Weibull distribution for the infection periods)
-                 out = run_DAMCMC(
-                   Y,
+                 gamma = g1) # parameters of the Weibull distribution for the infection periods)
+   out = run_DAMCMC(Y,
                    N = iter,
                    iota_dist = "exponential",
                    rho = rho,
@@ -62,7 +61,7 @@ PDSIR_calc = function(data_Sellke,
                      b_lambda = 0.1
                    )
                  )
-                 return(out)
+   return(out)
 }
 
 
@@ -180,7 +179,7 @@ for (i in 1:50)
     data_Sellke =  simulated_data[[i]],
     rho = 0.08,
     Tmax = 10,
-    iter = 100,
+    iter = 1e5,
     b1 = 0.1,
     g1 = 0.1
   ) ## rho is calculated so that we get around 20% acceptance probability.
